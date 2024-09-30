@@ -124,11 +124,26 @@ def prepare_game():
     with open("valid_guesses.txt", "r", encoding="ascii") as valid_nonsecret_words:
         valid_words = [word.rstrip() for word in valid_nonsecret_words.readlines()]
 
+    secret_words = []
+    with open("secret_words.txt", "r", encoding="ascii") as file:
+        for line in file:
+            secret_words.append(line.rstrip())
+
     # Modify this if statement! This is just starter code.
     if len(sys.argv) == 2:
-        secret_word = sys.argv[1]
+        arg = sys.argv[1]
+        if arg.isdigit():
+            random.seed(int(arg))
+            secret_word = random.choice(secret_words)
+        elif arg.islower() and len(arg) == 5 and arg in valid_words:
+            secret_word = arg
+        else:
+            raise ValueError("Invalid input: must be a 5-letter lowercase word from the valid words list or an integer.")
+    elif len(sys.argv) > 2:
+        raise ValueError("Invalid input: only one argument allowed.")
     else:
         secret_word = "hello"
+    valid_words.append(secret_word)
 
     # You do not have to change this return statement
     return secret_word, valid_words
@@ -146,7 +161,7 @@ def is_valid_guess(guess, valid_guesses):
     """
 
     # Modify this return statement!
-    return True
+    return valid_guesses.count(guess) > 0
 
 
 # TODO: Modify this function. You may delete this comment when you are done.
@@ -170,8 +185,23 @@ def get_feedback(secret_word, guessed_word):
     feedback = [None] * NUM_LETTERS
 
     # Modify this! This is just starter code.
+    feedback = [None] * NUM_LETTERS
+    secret_counts = {}
+    for letter in secret_word:
+        secret_counts[letter] = secret_counts.get(letter, 0) + 1
+        
     for i in range(NUM_LETTERS):
-        feedback[i] = WRONG_SPOT_COLOR
+        if guessed_word[i] == secret_word[i]:
+            feedback[i] = CORRECT_COLOR
+            secret_counts[guessed_word[i]] -= 1
+            
+    for i in range(NUM_LETTERS):
+        if feedback[i] is None:  # Check if the letter was already marked as correct
+            if guessed_word[i] in secret_word and secret_counts[guessed_word[i]] > 0:
+                feedback[i] = WRONG_SPOT_COLOR 
+                secret_counts[guessed_word[i]] -= 1
+            else:
+                feedback[i] = NOT_IN_WORD_COLOR
 
     # You do not have to change this return statement
     return color_word(feedback, guessed_word)
