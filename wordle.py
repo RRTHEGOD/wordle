@@ -2,7 +2,7 @@
 Student information for this assignment:
 
 Replace <FULL NAME> with your name.
-On my/our honor, Nawal Osama and Rahul Rathan, this 
+On my/our honor, Nawal Osama and Rahul Rathan,this 
 programming assignment is my own work and I have not provided this code to 
 any other student.
 
