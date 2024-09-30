@@ -1,6 +1,5 @@
 """
 Student information for this assignment:
-
 On my/our honor, Nawal Osama and Rahul Rathan,this 
 programming assignment is my own work and I have not provided this code to 
 any other student.
@@ -141,7 +140,7 @@ def prepare_game():
     elif len(sys.argv) > 2:
         raise ValueError("Invalid input: only one argument allowed.")
     else:
-        secret_word = "hello"
+        secret_word = random.choice(secret_words)
     valid_words.append(secret_word)
 
     # You do not have to change this return statement
